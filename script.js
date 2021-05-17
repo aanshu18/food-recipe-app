@@ -1,30 +1,25 @@
 const meals = document.getElementById("meals");
 
-function getMealsFromLS(){
-    const mealIds = JSON.parse(localStorage.getItem("mealIds"));
-    console.log("ce");
-    console.log(localStorage.getItem("mealIds"));
-    console.log(mealIds);
-    console.log(mealIds);
 
-    return mealIds === null ? [] : mealIds;
+function addMealLS(mealId) {
+    const mealIds = getMealsLS();
+
+    localStorage.setItem("mealIds", JSON.stringify([...mealIds, mealId]));
 }
 
-function removeMealFromLS(mealId){
-    console.log("asdasdasd");
-    const mealIds = localStorage.getItem("mealIds");
-    localStorage.setItem("mealIds",JSON.stringify(mealIds.filter((id) => id != mealId)));
-}    
+function removeMealLS(mealId) {
+    const mealIds = getMealsLS();
 
-function addMealToLS(mealId){
+    localStorage.setItem(
+        "mealIds",
+        JSON.stringify(mealIds.filter((id) => id !== mealId))
+    );
+}
 
-    const mealIds = getMealsFromLS();
-    mealIds = [...mealIds, mealId];
-    console.log(mealIds,mealId);
-    console.log(mealIds.__proto__);
-    console.log(mealId.__proto__);
+function getMealsLS() {
+    const mealIds = JSON.parse(localStorage.getItem("mealIds"));
 
-    localStorage.setItem("mealIds",JSON.stringify([...mealIds,mealId]));
+    return mealIds === null ? [] : mealIds;
 }
 
 
@@ -59,11 +54,13 @@ function loadRandomMeal(randomMealData) {
     const btn = randomMealImage.querySelector(".meal-body .fav-btn");
     btn.addEventListener("click",()=>{
         if(btn.classList.contains("active")){
-            removeMealFromLS(randomMealData.idMeal);
+            console.log("if");
+            removeMealLS(randomMealData.idMeal);
             btn.classList.remove("active");
         }
         else{
-            addMealToLS(randomMealData.idMeal);
+            console.log("else");
+            addMealLS(randomMealData.idMeal);
             btn.classList.toggle("active");
         }
     });
@@ -77,10 +74,5 @@ async function getMealById(id) {
 async function getMealBySearch(term) {
   fetch("https://www.themealdb.com/api/json/v1/1/search.php?s=" + term);
 }
-
-
-
-
-
 
 getRandomMeal();
